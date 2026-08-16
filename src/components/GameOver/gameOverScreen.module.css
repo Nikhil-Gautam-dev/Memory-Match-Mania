@@ -1,0 +1,112 @@
+.victoryModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 480px;
+  width: 90%;
+  padding: 36px 28px;
+  background: var(--glass-bg, rgba(18, 24, 43, 0.85));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 183, 3, 0.4);
+  border-radius: 28px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 183, 3, 0.2);
+  text-align: center;
+  animation: floatAnim 6s ease-in-out infinite;
+  z-index: 10;
+}
+
+.trophyIcon {
+  font-size: 56px;
+  filter: drop-shadow(0 0 15px rgba(255, 183, 3, 0.8));
+  animation: titleGlow 3s infinite;
+}
+
+.stars {
+  font-size: 28px;
+  letter-spacing: 6px;
+}
+
+.victoryTitle {
+  font-family: var(--font-heading, 'Orbitron', sans-serif);
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  background: linear-gradient(135deg, #ffb703 0%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(255, 183, 3, 0.5);
+}
+
+.victorySubtitle {
+  font-size: 14px;
+  color: #cbd5e1;
+}
+
+.newRecordBadge {
+  font-family: var(--font-heading, 'Orbitron', sans-serif);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #070913;
+  background: linear-gradient(135deg, #ffb703 0%, #00f0ff 100%);
+  padding: 6px 18px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(255, 183, 3, 0.6);
+  animation: pulseGlow 2s infinite;
+}
+
+.scoreGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  width: 100%;
+  margin: 8px 0;
+}
+
+.scoreBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 20px;
+  background: rgba(255, 183, 3, 0.1);
+  border: 1px solid rgba(255, 183, 3, 0.3);
+  border-radius: 16px;
+}
+
+.bestScoreBox {
+  background: rgba(0, 240, 255, 0.1);
+  border-color: rgba(0, 240, 255, 0.3);
+}
+
+.bestScoreBox .scoreLabel {
+  color: var(--color-accent-cyan, #00f0ff);
+}
+
+.bestScoreBox .scoreNumber {
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+}
+
+.scoreLabel {
+  font-family: var(--font-heading, 'Orbitron', sans-serif);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #ffb703;
+}
+
+.scoreNumber {
+  font-family: var(--font-heading, 'Orbitron', sans-serif);
+  font-size: 32px;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 0 15px rgba(255, 183, 3, 0.8);
+}
+
+.actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 8px;
+}
+

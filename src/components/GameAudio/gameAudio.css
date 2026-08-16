@@ -1,64 +1,56 @@
-.main{
-    height: 40px;
-    width: 100px;
-    background-color: gray;
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    padding: 0 5px;
-    display: flex;
-    justify-content: left;
-    align-items: center;
+.audioToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(18, 24, 43, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.slider{
-    height: 35px;
-    width: 35px;
-    background-color: white;
-    border-radius: 50%;
-    position: relative;
-    left: 0px;
-    
+.audioIcon {
+  font-size: 16px;
 }
 
-.slider-animation-left-right{
-    animation: woobleLeftRight 0.5s ease-in ;
-    animation-iteration-count: 1;
-    left: 55px;
+.audioText {
+  font-family: var(--font-heading, 'Orbitron', sans-serif);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #cbd5e1;
 }
 
-@keyframes woobleLeftRight {
-    0%{
-        left: 0px;
-    }
-    100%{
-        left: 55px;
-    }
+.audioDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #64748b;
+  transition: all 0.25s ease;
 }
 
-.slider-animation-right-left{
-    animation: woobleRightLeft 0.5s ease-in ;
-    animation-iteration-count: 1;
-    left: 0px;
+.audioOn {
+  border-color: rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
 }
 
-@keyframes woobleRightLeft {
-    0%{
-        left: 55px;
-    }
-    100%{
-        left: 0px;
-    }
+.audioOn .audioText {
+  color: var(--color-accent-cyan, #00f0ff);
 }
 
-.on{
-    background-color: rgb(73, 73, 224);
+.audioOn .audioDot {
+  background: var(--color-accent-cyan, #00f0ff);
+  box-shadow: 0 0 8px var(--color-accent-cyan, #00f0ff);
 }
 
-.off{
-    background-color: gray;
+.audioToggleBtn:hover {
+  transform: translateY(-2px);
 }
+
 
 
 

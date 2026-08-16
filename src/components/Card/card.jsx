@@ -1,47 +1,48 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./card.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { hide, selectCards } from "../../features/game/gameSlice.js";
+import { useSelector } from "react-redux";
+import { getCardAvatar } from "../../utils/cardRandomPositionGenerator.js";
 
-function Card({ number, height, width, id }) {
-  const [flipTheCard, setFlipTheCard] = useState("");
+function Card({ number, id }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+  
   const card = useSelector(state => {
-    const card = state.Cards.find((card => card.id === id))
-
-    return card
-  })
-
-  const dispatch = useDispatch()
+    return state.Cards.find((c) => c.id === id);
+  });
 
   useEffect(() => {
-    setFlipTheCard(prev => {
-      if (card.hide) {
-        prev = style.flip;
+    if (card) {
+      setIsFlipped(card.hide);
+    }
+  }, [card?.hide]);
 
-        return prev
-      }
-      else {
-        return ""
-      }
-    })
-  }, [card?.hide])
-
-
+  const avatar = getCardAvatar(number);
+  const isMatched = card?.selected && !card?.hide;
+  const isWildcard = number === -1;
 
   return (
-    <>
-      <div
-        className={`${style["main-card-container"]}`}
-        style={{ height, width }}
-      >
-        <div className={`${style.card} ${flipTheCard}`}>
-          <div className={style["the-front"]}>{number}</div>
-          <div className={style["the-back"]}>😊</div>
+    <div className={style.cardContainer}>
+      <div className={`${style.cardInner} ${isFlipped ? style.flipped : ""} ${isMatched ? style.matched : ""}`}>
+        {/* Front Face (Revealed Card) */}
+        <div className={style.cardFront}>
+          <span className={style.avatarEmoji}>{avatar}</span>
+          <span className={`${style.numberBadge} ${isWildcard ? style.bonusBadge : ""}`}>
+            {isWildcard ? "★ BONUS" : `#${number}`}
+          </span>
+          <div className={style.cardGlowOverlay}></div>
+        </div>
+
+
+        {/* Back Face (Covered Card) */}
+        <div className={style.cardBack}>
+          <div className={style.cyberPattern}>
+            <span className={style.backEmblem}>✨</span>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
 export default Card;
+

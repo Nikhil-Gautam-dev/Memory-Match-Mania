@@ -1,18 +1,21 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit";
 import { randomCardPostionGenerator } from "../../utils/cardRandomPositionGenerator.js";
 
+const savedHighScore = parseInt(localStorage.getItem("memory_match_high_score") || "0", 10);
+
 const initialState = {
   Cards: [],
   selectedCards: {},
   score: 100,
+  highScore: savedHighScore,
   flip: false,
   matchOver: false,
   grid: null,
   gameOver: false,
-  pairNumbers: [0],
+  pairNumbers: [],
   start: true,
-  timeOutID:null,
-  audio:false
+  timeOutID: null,
+  audio: false
 };
 
 export const gameSlice = createSlice({
@@ -88,6 +91,14 @@ export const gameSlice = createSlice({
 
     updateScore: (state, action) => {
       state.score = state.score + action.payload;
+      if (state.score > state.highScore) {
+        state.highScore = state.score;
+        try {
+          localStorage.setItem("memory_match_high_score", state.score.toString());
+        } catch (e) {
+          console.error("Failed to save high score:", e);
+        }
+      }
     },
     updateStart: (state, action) => {
       state.start = action.payload;
@@ -100,30 +111,37 @@ export const gameSlice = createSlice({
       state.gameOver = action.payload;
     },
 
-    updateTimeId: (state,action) =>{
-      state.timeOutID = action.payload
-
+    updateTimeId: (state, action) => {
+      state.timeOutID = action.payload;
     },
 
-    updateAudio:(state,action)=>{
-      state.audio = action.payload
+    updateAudio: (state, action) => {
+      state.audio = action.payload;
     },
 
     reStart: (state, action) => {
-      // console.log(action.payload.start)
       state.Cards = [];
       state.selectedCards = {};
-      state.score = action.payload?.score ? action.payload.score : 100;
+      const newScore = action.payload?.score ? action.payload.score : 100;
+      state.score = newScore;
+      if (newScore > state.highScore) {
+        state.highScore = newScore;
+        try {
+          localStorage.setItem("memory_match_high_score", newScore.toString());
+        } catch (e) {
+          console.error("Failed to save high score:", e);
+        }
+      }
       state.flip = false;
       state.matchOver = false;
       state.grid = action.payload?.grid ? action.payload.grid : null;
       state.gameOver = false;
-      state.pairNumbers = [0];
-      // state.start = !action.payload?.start ? false : true;
-      console.log("restart")
+      state.pairNumbers = [];
     },
   },
 });
+
+
 
 export const {
   initiateGame,

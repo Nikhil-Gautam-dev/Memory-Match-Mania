@@ -1,4 +1,64 @@
-.grid-container{
-    display: grid;
-    gap: 10px;
+.gameContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 680px;
+  padding: 0 16px;
 }
+
+.hudBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--glass-bg, rgba(18, 24, 43, 0.8));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.15));
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.hudStats {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.gridContainer {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  max-width: 520px;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardSlot {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loadingText {
+  font-family: var(--font-heading, 'Orbitron', sans-serif);
+  font-size: 16px;
+  color: var(--color-accent-cyan, #00f0ff);
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+  padding: 40px;
+}
+
+@media (max-width: 500px) {
+  .hudBar {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .gridContainer {
+    gap: 8px;
+  }
+}

@@ -12,7 +12,6 @@ import GameAudio from "./components/GameAudio/gameAudio.jsx";
 import useSound from 'use-sound';
 import click from './assets/bg-music/click.wav';
 
-
 function App() {
   const gridFromState = useSelector((state) => state.grid);
   const gameOverFromState = useSelector((state) => state.gameOver);
@@ -23,70 +22,79 @@ function App() {
   const [gameOver, setGameOver] = useState(gameOverFromState);
   const [play] = useSound(click);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+  const CardsFromState = useSelector((state) => state.Cards);
 
   useMemo(() => {
     setGrid(gridFromState);
   }, [gridFromState]);
 
   useEffect(() => {
-    if(pairNumbersFromState?.length === 0){
-      dispatch(updateGameOver(true))
+    if (!startFromState && CardsFromState.length > 0 && pairNumbersFromState?.length === 0) {
+      dispatch(updateGameOver(true));
     }
-    
-  }, [pairNumbersFromState]);
+  }, [pairNumbersFromState, startFromState, CardsFromState.length]);
 
-  useMemo(()=>{
-    setStart(startFromState)
-  },[startFromState])
 
-  useMemo(()=>{
-    setGameOver(gameOverFromState)
-  },[gameOverFromState])
+  useMemo(() => {
+    setStart(startFromState);
+  }, [startFromState]);
+
+  useMemo(() => {
+    setGameOver(gameOverFromState);
+  }, [gameOverFromState]);
 
   return (
-    <>
-      <div className={style.main}>
-        <section className={style["upper-section"]}>
-          <GameAudio/>
-          <div className={style.title}>Memory-Match-Mania</div>
-        </section>
-        <section className={style["lower-section"]}>
-          {start ? (
-            <>
-              <div className={style["screen-widgets"]}>
-                <StartScreen />
-                <GameButton
-                  textBtn="Start"
-                  clickHandler={() => {
-                    console.log(Date.now())
-                    play()
-                    // setStart(false);
-                    dispatch(updateStart(false))}}
-                />
-              </div>
-            </>
-          ) : !grid ? (
-            <>
-              <GameButton
-                textBtn="back"
-                clickHandler={() => {
-                  play()
-                  dispatch(updateStart(true))}}
-              />
-              <GameOptionScreen />
-            </>
-          ) : 
-          !gameOver ? (
-            <Game />
-          ) : (
-           <GameOverScreen/>
-          )
-          }
-        </section>
-      </div>
-    </>
+    <div className={style.main}>
+      {/* Upper Navigation & Title Banner */}
+      <header className={style.header}>
+        <div className={style.audioWrapper}>
+          <GameAudio />
+        </div>
+        
+        <div className={style.titleWrapper}>
+          <h1 className={style.title}>MEMORY MATCH MANIA</h1>
+          <span className={style.subtitle}>CYBER MATRIX EDITION</span>
+        </div>
+        
+        <div className={style.headerSpacer}></div>
+      </header>
+
+      {/* Main Game Screen Viewport */}
+      <main className={style.viewport}>
+        {start ? (
+          <div className={style.screenWidget}>
+            <StartScreen />
+            <GameButton
+              textBtn="PRESS START ➔"
+              clickHandler={() => {
+                play();
+                dispatch(updateStart(false));
+              }}
+            />
+          </div>
+        ) : !grid ? (
+          <div className={style.screenWidget}>
+            <GameOptionScreen />
+            <GameButton
+              textBtn="← BACK TO MAIN MENU"
+              variant="secondary"
+              clickHandler={() => {
+                play();
+                dispatch(updateStart(true));
+              }}
+            />
+          </div>
+        ) : !gameOver ? (
+          <Game />
+        ) : (
+          <GameOverScreen />
+        )}
+      </main>
+    </div>
   );
 }
 
 export default App;
+

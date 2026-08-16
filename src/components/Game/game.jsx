@@ -25,138 +25,143 @@ function Game() {
   const selectedCardFromState = useSelector((state) => state.selectedCards);
   const pairNumbersFromState = useSelector((state) => state.pairNumbers);
   const scoreFromState = useSelector((state) => state.score);
-  const [grid, setGrid] = useState(gridFromState);
   const dispatch = useDispatch();
   const CardsFromState = useSelector((state) => state.Cards);
-  const [Cards, setCards] = useState(CardsFromState);
+  
   const [timer, setTimer] = useState(3);
+  const [isEvaluating, setIsEvaluating] = useState(false);
   const [play] = useSound(flip);
 
-  useMemo(() => {
-    setCards(CardsFromState);
+  useEffect(() => {
+    setTimer(3);
+    setIsEvaluating(false);
+
     const intervalId = setInterval(() => {
-      setTimer(prevTimer => prevTimer-1);
-      console.log(timer)
+      setTimer((prevTimer) => {
+        if (prevTimer <= 1) {
+          clearInterval(intervalId);
+          dispatch(hide());
+          return 0;
+        }
+        return prevTimer - 1;
+      });
     }, 1000);
 
-    setTimeout(() => {
-      clearInterval(intervalId);
-      dispatch(hide());
-      console.log("play")
-      
-    }, 3000);
-  }, [CardsFromState.length]);
+    return () => clearInterval(intervalId);
+  }, [CardsFromState.length, dispatch]);
 
-  
+  const cardSelectionHandler = (CardItem) => {
+    // Ignore clicks if memory preview is active, an evaluation is in progress, or card is already revealed
+    if (timer > 0 || isEvaluating || CardItem.selected) return;
 
-  // dispatch(initiateGame())
+    play();
 
-  const cardSelectionHandler = (Card) => {
-    play()
-    if (!Card.selected && timer === 0) {
-      if (!Object.keys(selectedCardFromState).length) {
-        // first selection
+    // Wildcard Star Card (-1) -> Auto match with bonus score
+    if (CardItem.number === -1) {
+      dispatch(hide(CardItem.id));
+      dispatch(updateScore(15));
+      return;
+    }
 
-        const newSelectedCardState = {};
-        newSelectedCardState[Card.number] = [Card.id];
+    if (!Object.keys(selectedCardFromState).length) {
+      // First card selection
+      const newSelectedCardState = {};
+      newSelectedCardState[CardItem.number] = [CardItem.id];
 
-        dispatch(selectCards(newSelectedCardState));
-        dispatch(hide(Card.id));
-    
-      }
-      //
-      else if (selectedCardFromState[Card.number]) {
-        dispatch(hide(Card.id));
-        
+      dispatch(selectCards(newSelectedCardState));
+      dispatch(hide(CardItem.id));
+    } else if (selectedCardFromState[CardItem.number]) {
+      // Second card selection - MATCH!
+      setIsEvaluating(true);
+      dispatch(hide(CardItem.id));
 
-        const newSelectedCardState = {};
+      const newSelectedCardState = { ...selectedCardFromState };
+      newSelectedCardState[CardItem.number] = [
+        CardItem.id,
+        selectedCardFromState[CardItem.number][0],
+      ];
+      dispatch(selectCards(newSelectedCardState));
 
-        for (let keys in selectedCardFromState) {
-          newSelectedCardState[keys] = selectedCardFromState[keys];
-        }
-
-        newSelectedCardState[Card.number] = [
-          Card.id,
-          selectedCardFromState[Card.number][0],
-        ];
-        dispatch(selectCards(newSelectedCardState));
-
-        let updatedPairNumbers = [...pairNumbersFromState];
-        let index = updatedPairNumbers.indexOf(Card.number);
+      let updatedPairNumbers = [...pairNumbersFromState];
+      let index = updatedPairNumbers.indexOf(CardItem.number);
+      if (index !== -1) {
         updatedPairNumbers.splice(index, 1);
-
-        dispatch(updateScore(20));
-
-        setTimeout(() => {
-          dispatch(selectCards({}));
-          dispatch(updatePairNumbers(updatedPairNumbers));
-        }, 800);
       }
-      //
-      else {
-        dispatch(hide(Card.id));
 
-        const newSelectedCardState = {};
+      dispatch(updateScore(20));
 
-        for (let keys in selectedCardFromState) {
-          newSelectedCardState[keys] = selectedCardFromState[keys];
-        }
+      setTimeout(() => {
+        dispatch(selectCards({}));
+        dispatch(updatePairNumbers(updatedPairNumbers));
+        setIsEvaluating(false);
+      }, 500);
+    } else {
+      // Second card selection - MISMATCH!
+      setIsEvaluating(true);
+      dispatch(hide(CardItem.id));
 
-        newSelectedCardState[Card.number] = [Card.id];
+      const newSelectedCardState = { ...selectedCardFromState };
+      newSelectedCardState[CardItem.number] = [CardItem.id];
 
-        dispatch(selectCards(newSelectedCardState));
+      dispatch(selectCards(newSelectedCardState));
+      dispatch(updateScore(-10));
 
-        dispatch(updateScore(-10));
-
-        setTimeout(() => {
-          dispatch(deselectCards());
-        }, 800);
-      }
+      setTimeout(() => {
+        dispatch(deselectCards());
+        setIsEvaluating(false);
+      }, 800);
     }
   };
 
   return (
-    <>
-      <GameButton
-        textBtn="restart"
-        clickHandler={() => {
-          dispatch(gridSelector(0));
-          dispatch(reStart())
-        }}
-      />
+    <div className={style.gameContainer}>
+      {/* Top Game HUD Bar */}
+      <div className={style.hudBar}>
+        <GameButton
+          textBtn="↺ RESTART"
+          variant="secondary"
+          clickHandler={() => {
+            dispatch(gridSelector(0));
+            dispatch(reStart());
+          }}
+        />
 
-      <TimerCard timer={timer} />
-      <ScoreCard score={scoreFromState} />
+        <div className={style.hudStats}>
+          <TimerCard timer={timer} />
+          <ScoreCard score={scoreFromState} />
+        </div>
+      </div>
 
+      {/* Grid Container */}
       <div
-        className={style["grid-container"]}
+        className={style.gridContainer}
         style={{
           gridTemplateColumns: `repeat(${gridFromState}, 1fr)`,
-          gridTemplateRows: `repeat(${gridFromState}, 1fr)`,
         }}
       >
         {CardsFromState.length !== 0 ? (
           CardsFromState.map((card) => (
             <div
               key={card.id}
+              className={style.cardSlot}
               onClick={() => {
                 cardSelectionHandler(card);
               }}
             >
               <Card
                 number={card.number}
-                height="100px"
-                width="75px"
                 id={card.id}
               />
             </div>
           ))
         ) : (
-          <>Loading....</>
+          <div className={style.loadingText}>Initializing Memory Matrix...</div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 
 export default Game;
+
+

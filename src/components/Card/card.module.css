@@ -1,46 +1,124 @@
-.main-card-container{
-    /* height: 200px;
-    width: 150px; */
-    background: transparent;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius:10px ;
+.cardContainer {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 4;
+  perspective: 1000px;
+  cursor: pointer;
 }
 
-.card{
-    height: 90%;
-    width: 80%; 
-    position: absolute;
-    background-color:#297373;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transform-style: preserve-3d;
-    transition: all 0.9s ease;
-    border-radius:10px ;
-    border: 2px solid white;
-    font-size:larger;
+.cardInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
 
+.cardContainer:hover .cardInner {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 10px 25px rgba(0, 240, 255, 0.3);
+}
+
+.flipped {
+  transform: rotateY(180deg);
+}
+
+.cardContainer:hover .flipped {
+  transform: rotateY(180deg) translateY(-4px) scale(1.03);
+}
+
+/* Front and Back common styles */
+.cardFront, .cardBack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+/* Front Face (Revealed) */
+.cardFront {
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+  border-color: rgba(0, 240, 255, 0.5);
+  box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.15), 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.avatarEmoji {
+  font-size: clamp(24px, 5vw, 42px);
+  filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.5));
+  animation: floatAnim 4s ease-in-out infinite;
+}
+
+.numberBadge {
+  position: absolute;
+  bottom: 8px;
+  font-family: var(--font-heading, 'Orbitron', sans-serif);
+  font-size: clamp(10px, 1.8vw, 13px);
+  font-weight: 800;
+  color: var(--color-accent-cyan, #00f0ff);
+  background: rgba(0, 240, 255, 0.12);
+  padding: 2px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 240, 255, 0.25);
+}
+
+.bonusBadge {
+  color: #ffb703;
+  background: rgba(255, 183, 3, 0.15);
+  border-color: rgba(255, 183, 3, 0.4);
+  box-shadow: 0 0 8px rgba(255, 183, 3, 0.3);
 }
 
 
-.flip{
-    transform: rotateY(180deg);
- }
-
-
-.the-front{
-    position: absolute;
-    backface-visibility: hidden;
+/* Back Face (Covered) */
+.cardBack {
+  background: linear-gradient(135deg, #1e1b4b 0%, #311b92 50%, #4a148c 100%);
+  border-color: rgba(168, 85, 247, 0.4);
+  transform: rotateY(180deg);
+  box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.3), 0 8px 20px rgba(0, 0, 0, 0.5);
 }
-.the-back{
-    position: absolute;
-    backface-visibility: hidden;
-    transform: rotateY(180deg);
+
+.cyberPattern {
+  width: 80%;
+  height: 80%;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
 }
+
+.backEmblem {
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Matched State */
+.matched {
+  animation: matchSuccess 0.5s ease;
+}
+
+.matched .cardFront {
+  border-color: var(--color-success, #10b981);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5), inset 0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+.matched .numberBadge {
+  color: var(--color-success, #10b981);
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
 
 
  
