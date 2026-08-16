@@ -1,0 +1,21 @@
+.info{
+    display: flex;
+    flex-direction:column ;
+    justify-items: center;
+    align-items: center;
+    text-align: center;
+    color: black;
+    gap: 20px; 
+    width: 50%; 
+    border: 2px solid black;
+    background-color: aliceblue;
+}
+
+.description-para{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align:justify;
+    padding: 20px;
+}

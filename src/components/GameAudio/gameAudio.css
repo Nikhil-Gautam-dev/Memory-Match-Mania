@@ -1,0 +1,67 @@
+.main{
+    height: 40px;
+    width: 100px;
+    background-color: gray;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding: 0 5px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.slider{
+    height: 35px;
+    width: 35px;
+    background-color: white;
+    border-radius: 50%;
+    position: relative;
+    left: 0px;
+    
+}
+
+.slider-animation-left-right{
+    animation: woobleLeftRight 0.5s ease-in ;
+    animation-iteration-count: 1;
+    left: 55px;
+}
+
+@keyframes woobleLeftRight {
+    0%{
+        left: 0px;
+    }
+    100%{
+        left: 55px;
+    }
+}
+
+.slider-animation-right-left{
+    animation: woobleRightLeft 0.5s ease-in ;
+    animation-iteration-count: 1;
+    left: 0px;
+}
+
+@keyframes woobleRightLeft {
+    0%{
+        left: 55px;
+    }
+    100%{
+        left: 0px;
+    }
+}
+
+.on{
+    background-color: rgb(73, 73, 224);
+}
+
+.off{
+    background-color: gray;
+}
+
+
+
+
+
+
