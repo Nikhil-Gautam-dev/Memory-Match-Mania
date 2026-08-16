@@ -7,7 +7,6 @@ const MusicWrapper = ({ children, src }) => {
 
   useEffect(() => {
     if (audioFromState) {
-      console.log(audioFromState)
       const audioElement = new Audio(src);
       audioElement.loop = true;
       audioElement.play().catch((error) => {
@@ -19,7 +18,6 @@ const MusicWrapper = ({ children, src }) => {
     } 
     
     else if (!audioFromState && audio){
-      console.log(audioFromState)
       audio.pause();
       setAudio(null);
     }
